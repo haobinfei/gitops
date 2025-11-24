@@ -12,7 +12,7 @@
 ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
 ##
 global:
-  imageRegistry: "5w046j1ulw93ze.xuanyuan.run"
+  imageRegistry: "registry.cn-beijing.aliyuncs.com"
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
@@ -100,7 +100,7 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnami/os-shell
+      repository: ss-vip/os-shell
       tag: 12-debian-12-r51
       digest: ""
       pullPolicy: IfNotPresent
@@ -166,7 +166,7 @@ defaultInitContainers:
 ##
 image:
   registry: docker.io
-  repository: bitnami/clickhouse
+  repository: ss-vip/clickhouse
   tag: 25.7.5-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -957,7 +957,7 @@ keeper:
   ##
   image:
     registry: docker.io
-    repository: bitnami/clickhouse-keeper
+    repository: ss-vip/clickhouse-keeper
     tag: 25.7.5-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
