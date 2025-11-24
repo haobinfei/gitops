@@ -1451,7 +1451,7 @@ keeper:
     ## If undefined (the default) or set to null, no storageClassName spec is
     ## set, choosing the default provisioner.
     ##
-    storageClass: ""
+    storageClass: "csi-rbd-sc"
     ## @param keeper.persistence.accessModes Persistent Volume Access Modes
     ##
     accessModes:
