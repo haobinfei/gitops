@@ -255,7 +255,7 @@ containerSecurityContext:
 ## @param auth.existingSecretKey Name of the key inside the existing secret
 ##
 auth:
-  username: default
+  username: clickuser
   password: "Dg.hsr2025"
   existingSecret: ""
   existingSecretKey: ""
@@ -722,7 +722,7 @@ externalAccess:
   service:
     ## @param externalAccess.service.type Kubernetes Service type for external access. It can be NodePort, LoadBalancer or ClusterIP
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param externalAccess.service.ports.http ClickHouse service HTTP port
     ## @param externalAccess.service.ports.https ClickHouse service HTTPS port
     ## @param externalAccess.service.ports.tcp ClickHouse service TCP port
@@ -931,7 +931,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: ""
+  storageClass: "csi-rbd-sc"
   ## @param persistence.labels Persistent Volume Claim labels
   ##
   labels: {}
@@ -1128,6 +1128,14 @@ externalZookeeper:
 ##
 zookeeper:
   enabled: true
+  global:
+    storageClass: "csi-rbd-sc"
+  persistence:
+    enabled: true
+    storageClass: "csi-rbd-sc"
+    size: 8Gi
+    accessModes:
+      - ReadWriteOnce
   ## Override zookeeper default image as 3.9 is not supported https://github.com/ClickHouse/ClickHouse/issues/53749
   ## ref: https://github.com/bitnami/containers/tree/main/bitnami/zookeeper
   ## @param zookeeper.image.registry [default: REGISTRY_NAME] Zookeeper image registry
