@@ -550,7 +550,6 @@ dblessConfig:
 # for Kong specific configuration.
 ingressController:
   enabled: true
-  installCRDs: false
   image:
     repository: registry.cn-beijing.aliyuncs.com/ss-vip/kubernetes-ingress-controller
     tag: "3.5"
