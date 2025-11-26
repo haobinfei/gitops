@@ -110,6 +110,11 @@ env:
   admin_gui_url: https://kong.dev.ss-vip.cn
   admin_gui_api_url: https://kong-admin.dev.ss-vip.cn
   plugins: "bundled,clickhouse-logger"
+  pg_host: "postgresql-dev.postgresql.svc.cluster.local"
+  pg_port: "5432"
+  pg_user: "kong"
+  pg_password: "kong123"
+  pg_database: "kong"
 # This section is any customer specific environments variables that doesn't require KONG_ prefix.
 # These custom environment variables are typicall used in custom plugins or serverless plugins to
 # access environment specific credentials or tokens.
@@ -472,7 +477,7 @@ migrations:
   # Enable pre-upgrade migrations (run "kong migrations up")
   preUpgrade: true
   env:
-    pg_host: "your-postgresql-host.com"
+    pg_host: "postgresql-dev.postgresql.svc.cluster.local"
     pg_port: "5432"
     pg_user: "kong"
     pg_password: "kong123"
