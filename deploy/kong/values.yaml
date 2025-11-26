@@ -109,6 +109,7 @@ env:
   prefix: /kong_prefix/
   admin_gui_url: https://kong.dev.ss-vip.cn
   admin_gui_api_url: https://kong-admin.dev.ss-vip.cn
+  plugins: "bundled,clickhouse-logger"
 # This section is any customer specific environments variables that doesn't require KONG_ prefix.
 # These custom environment variables are typicall used in custom plugins or serverless plugins to
 # access environment specific credentials or tokens.
