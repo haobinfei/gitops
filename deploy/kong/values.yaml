@@ -471,6 +471,12 @@ secretVolumes: []
 migrations:
   # Enable pre-upgrade migrations (run "kong migrations up")
   preUpgrade: true
+  env:
+    pg_host: "your-postgresql-host.com"
+    pg_port: "5432"
+    pg_user: "kong"
+    pg_password: "kong123"
+    pg_database: "kong"
   # Enable post-upgrade migrations (run "kong migrations finish")
   postUpgrade: true
   # Annotations to apply to migrations job pods
