@@ -107,7 +107,6 @@ env:
   admin_gui_error_log: /dev/stderr
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
-  admin_gui_flush_ttl: "1"
   admin_gui_url: https://kong.dev.ss-vip.cn
   admin_gui_api_url: https://kong-admin.dev.ss-vip.cn
 # This section is any customer specific environments variables that doesn't require KONG_ prefix.
@@ -310,7 +309,7 @@ proxy:
     servicePort: 80
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
-    # nodePort: 32080
+    nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters: []
 
@@ -322,7 +321,7 @@ proxy:
     # Set a target port for the TLS port in proxy service
     # overrideServiceTargetPort: 8000
     # Set a nodePort which is available if service type is NodePort
-    # nodePort: 32443
+    nodePort: 32443
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
@@ -448,38 +447,13 @@ udpProxy:
 # Subdirectories (which are optional) require separate ConfigMaps/Secrets.
 # "path" indicates their directory under the main plugin directory: the example
 # below will mount the contents of kong-plugin-rewriter-migrations at "/opt/kong/rewriter/migrations".
-plugins:
-  configMerged:
-    - name: cors
-      config:
-        origins:
-        - http://kong.dev.ss-vip.cn
-        - https://kong.dev.ss-vip.cn
-        methods:
-        - GET
-        - POST
-        - PUT
-        - DELETE
-        - OPTIONS
-        - PATCH
-        headers:
-        - Accept
-        - Accept-Encoding
-        - Authorization
-        - Content-Type
-        - Origin
-        - User-Agent
-        - X-Requested-With
-        - X-CSRF-Token
-        exposed_headers:
-        - Access-Control-Allow-Origin
-        - Access-Control-Allow-Credentials
-        credentials: true
-        preflight_continue: false
-        max_age: 3600
+plugins: {}
   # configMaps:
-  # - pluginName: clickhouse-logger
-  #   name: clickhouse-logger-plugin
+  # - pluginName: rewriter
+  #   name: kong-plugin-rewriter
+  #   subdirectories:
+  #   - name: kong-plugin-rewriter-migrations
+  #     path: migrations
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
@@ -1384,4 +1358,3 @@ extraObjects: []
 #   config:
 #     per_consumer: false
 #   plugin: prometheus
-
