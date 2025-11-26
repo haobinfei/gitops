@@ -134,7 +134,7 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: registry.cn-beijing.aliyuncs.com/ss-vip/kong
-  tag: "3.9"
+  tag: "3.9-plugin"
   # Kong Enterprise
   # repository: kong/kong-gateway
   # tag: "3.9"
@@ -448,9 +448,9 @@ udpProxy:
 # "path" indicates their directory under the main plugin directory: the example
 # below will mount the contents of kong-plugin-rewriter-migrations at "/opt/kong/rewriter/migrations".
 plugins: 
-  configMaps:
-  - pluginName: clickhouse_logger
-    name: clickhouse_logger-plugin
+  configMaps: {}
+  # - pluginName: clickhouse_logger
+  #   name: clickhouse_logger-plugin
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
