@@ -25,17 +25,13 @@ spec:
         - -c
         - |
           echo "Starting distributed table creation..."
-          # 从环境变量获取认证信息
-          CH_USERNAME="${CLICKHOUSE_USERNAME}"
-          CH_PASSWORD="${CLICKHOUSE_PASSWORD}"
-          CH_CLUSTER="${CLICKHOUSE_CLUSTER}"
 
           # 构建认证参数
           AUTH_PARAMS=""
-          if [ -n "$CH_PASSWORD" ]; then
-            AUTH_PARAMS="--user '$CH_USERNAME' --password '$CH_PASSWORD'"
+          if [ -n "$CLICKHOUSE_PASSWORD" ]; then
+            AUTH_PARAMS="--user ${CLICKHOUSE_USERNAME} --password ${CLICKHOUSE_PASSWORD}"
           else
-            AUTH_PARAMS="--user '$CH_USERNAME'"
+            AUTH_PARAMS="--user ${CLICKHOUSE_USERNAME}"
           fi
 
 
@@ -48,11 +44,11 @@ spec:
           # 执行分布式 DDL 在所有节点上创建表
           clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --distributed_group=1 --multiquery "
             -- 创建数据库（在所有节点上）
-            DROP DATABASE IF EXISTS kong ON CLUSTER '{$CH_CLUSTER}';
-            CREATE DATABASE IF NOT EXISTS kong ON CLUSTER '{$CH_CLUSTER}';
+            DROP DATABASE IF EXISTS kong ON CLUSTER '{$CLICKHOUSE_CLUSTER}';
+            CREATE DATABASE IF NOT EXISTS kong ON CLUSTER '{$CLICKHOUSE_CLUSTER}';
             
             -- 创建本地表（在每个分片副本上）
-            CREATE TABLE IF NOT EXISTS kong.kong_logs_local ON CLUSTER '{$CH_CLUSTER}'
+            CREATE TABLE IF NOT EXISTS kong.kong_logs_local ON CLUSTER '{$CLICKHOUSE_CLUSTER}'
             (
                 event_time DateTime64(3) DEFAULT now64(),
                 service_name String,
@@ -79,7 +75,7 @@ spec:
             SETTINGS index_granularity = 8192;
             
             -- 创建分布式表（在所有节点上）
-            CREATE TABLE IF NOT EXISTS kong_logs.kong_logs_distributed ON CLUSTER '{$CH_CLUSTER}'
+            CREATE TABLE IF NOT EXISTS kong_logs.kong_logs_distributed ON CLUSTER '{$CLICKHOUSE_CLUSTER}'
             (
                 event_time DateTime64(3),
                 service_name String,
@@ -100,7 +96,7 @@ spec:
                 kong_latency Float32,
                 shard_num UInt8
             )
-            ENGINE = Distributed('{$CH_CLUSTER}', 'kong', 'kong_logs_local', rand());
+            ENGINE = Distributed('{$CLICKHOUSE_CLUSTER}', 'kong', 'kong_logs_local', rand());
             
             -- 验证表创建
             SELECT 
@@ -114,7 +110,7 @@ spec:
               hostName() as host,
               name as table_name,
               engine
-            FROM clusterAllReplicas('{$CH_CLUSTER}', system.tables) 
+            FROM clusterAllReplicas('{$CLICKHOUSE_CLUSTER}', system.tables) 
             WHERE database = 'kong'
             ORDER BY host, table_name;
           "
@@ -132,7 +128,7 @@ spec:
               hostName() as host,
               shard_num,
               count(*) as record_count
-            FROM clusterAllReplicas('{$CH_CLUSTER}', kong.kong_logs_distributed)
+            FROM clusterAllReplicas('{$CLICKHOUSE_CLUSTER}', kong.kong_logs_distributed)
             GROUP BY host, shard_num
             ORDER BY host, shard_num;
           "
