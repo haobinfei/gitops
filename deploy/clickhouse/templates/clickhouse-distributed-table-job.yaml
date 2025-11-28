@@ -44,11 +44,11 @@ spec:
           # 执行分布式 DDL 在所有节点上创建表
           clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --distributed_group=1 --multiquery "
             -- 创建数据库（在所有节点上）
-            DROP DATABASE IF EXISTS kong ON CLUSTER '{$CLICKHOUSE_CLUSTER}';
-            CREATE DATABASE IF NOT EXISTS kong ON CLUSTER '{$CLICKHOUSE_CLUSTER}';
+            DROP DATABASE IF EXISTS kong_distributed ON CLUSTER '${CLICKHOUSE_CLUSTER}';
+            CREATE DATABASE IF NOT EXISTS kong_distributed ON CLUSTER '${CLICKHOUSE_CLUSTER}';
             
             -- 创建本地表（在每个分片副本上）
-            CREATE TABLE IF NOT EXISTS kong.kong_logs_local ON CLUSTER '{$CLICKHOUSE_CLUSTER}'
+            CREATE TABLE IF NOT EXISTS kong_distributed.kong_logs_local ON CLUSTER '${CLICKHOUSE_CLUSTER}'
             (
                 event_time DateTime64(3) DEFAULT now64(),
                 service_name String,
@@ -75,7 +75,7 @@ spec:
             SETTINGS index_granularity = 8192;
             
             -- 创建分布式表（在所有节点上）
-            CREATE TABLE IF NOT EXISTS kong_logs.kong_logs_distributed ON CLUSTER '{$CLICKHOUSE_CLUSTER}'
+            CREATE TABLE IF NOT EXISTS kong_distributed.kong_logs_distributed ON CLUSTER '${CLICKHOUSE_CLUSTER}'
             (
                 event_time DateTime64(3),
                 service_name String,
@@ -96,7 +96,7 @@ spec:
                 kong_latency Float32,
                 shard_num UInt8
             )
-            ENGINE = Distributed('{$CLICKHOUSE_CLUSTER}', 'kong', 'kong_logs_local', rand());
+            ENGINE = Distributed('${CLICKHOUSE_CLUSTER}', 'kong_distributed', 'kong_logs_local', rand());
             
             -- 验证表创建
             SELECT 
@@ -110,15 +110,15 @@ spec:
               hostName() as host,
               name as table_name,
               engine
-            FROM clusterAllReplicas('{$CLICKHOUSE_CLUSTER}', system.tables) 
-            WHERE database = 'kong'
+            FROM clusterAllReplicas('${CLICKHOUSE_CLUSTER}', system.tables) 
+            WHERE database = 'kong_distributed'
             ORDER BY host, table_name;
           "
           
           # 测试数据插入
           echo "Testing data insertion..."
           clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --query "
-            INSERT INTO kong.kong_logs_distributed 
+            INSERT INTO kong_distributed.kong_logs_distributed 
             (event_time, service_name, route_name, consumer, client_ip, method, path, status_code, latency)
             VALUES
             (now(), 'test-service', 'test-route', 'test-user', '192.168.1.1', 'GET', '/api/test', 200, 12.5);
@@ -128,7 +128,7 @@ spec:
               hostName() as host,
               shard_num,
               count(*) as record_count
-            FROM clusterAllReplicas('{$CLICKHOUSE_CLUSTER}', kong.kong_logs_distributed)
+            FROM clusterAllReplicas('${CLICKHOUSE_CLUSTER}', kong_distributed.kong_logs_distributed)
             GROUP BY host, shard_num
             ORDER BY host, shard_num;
           "
