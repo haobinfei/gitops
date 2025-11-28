@@ -50,7 +50,7 @@ spec:
             -- 创建本地表（在每个分片副本上）
             CREATE TABLE IF NOT EXISTS kong_distributed.kong_logs_local ON CLUSTER '${CLICKHOUSE_CLUSTER}'
             (
-                event_time DateTime64(3) DEFAULT now64(),
+                timestamp DateTime64(3) DEFAULT now64(),
                 service_name String,
                 route_name String,
                 consumer String,
@@ -67,17 +67,17 @@ spec:
                 latency Float32 DEFAULT 0,
                 upstream_latency Float32 DEFAULT 0,
                 kong_latency Float32 DEFAULT 0,
-                shard_num UInt8 DEFAULT 0
+                shard_id UInt8 DEFAULT 0
             )
             ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/kong_logs_local', '{replica}')
-            PARTITION BY toYYYYMM(event_time)
-            ORDER BY (event_time, service_name, status_code)
+            PARTITION BY toYYYYMM(timestamp)
+            ORDER BY (timestamp, service_name, status_code)
             SETTINGS index_granularity = 8192;
             
             -- 创建分布式表（在所有节点上）
             CREATE TABLE IF NOT EXISTS kong_distributed.kong_logs_distributed ON CLUSTER '${CLICKHOUSE_CLUSTER}'
             (
-                event_time DateTime64(3),
+                timestamp DateTime64(3),
                 service_name String,
                 route_name String,
                 consumer String,
@@ -94,7 +94,7 @@ spec:
                 latency Float32,
                 upstream_latency Float32,
                 kong_latency Float32,
-                shard_num UInt8
+                shard_id UInt8 DEFAULT 0
             )
             ENGINE = Distributed('${CLICKHOUSE_CLUSTER}', 'kong_distributed', 'kong_logs_local', rand());
             
@@ -119,18 +119,18 @@ spec:
           echo "Testing data insertion..."
           clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --query "
             INSERT INTO kong_distributed.kong_logs_distributed 
-            (event_time, service_name, route_name, consumer, client_ip, method, path, status_code, latency)
+            (timestamp, service_name, route_name, consumer, client_ip, method, path, status_code, latency)
             VALUES
             (now(), 'test-service', 'test-route', 'test-user', '192.168.1.1', 'GET', '/api/test', 200, 12.5);
             
             -- 查询验证数据分布
             SELECT 
               hostName() as host,
-              shard_num,
+              shard_id,
               count(*) as record_count
             FROM clusterAllReplicas('${CLICKHOUSE_CLUSTER}', kong_distributed.kong_logs_distributed)
-            GROUP BY host, shard_num
-            ORDER BY host, shard_num;
+            GROUP BY host, shard_id
+            ORDER BY host, shard_id;
           "
           
           echo "Distributed table creation completed successfully!"
