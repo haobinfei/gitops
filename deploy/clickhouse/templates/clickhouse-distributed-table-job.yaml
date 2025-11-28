@@ -1,0 +1,151 @@
+{{- /*
+Copyright Broadcom, Inc. All Rights Reserved.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+
+{{- if not .Values.existingConfigdConfigmap }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clickhouse-create-kong-distributed-table
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    app.kubernetes.io/component: clickhouse
+    app.kubernetes.io/part-of: clickhouse
+spec:
+  template:
+    spec:
+      containers:
+      - name: create-kong-distributed-table
+        image: clickhouse/clickhouse-server:23.3
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Starting distributed table creation..."
+          # 从环境变量获取认证信息
+          CH_USERNAME="${CLICKHOUSE_USERNAME}"
+          CH_PASSWORD="${CLICKHOUSE_PASSWORD}"
+          CH_CLUSTER="${CLICKHOUSE_CLUSTER}"
+
+          # 构建认证参数
+          AUTH_PARAMS=""
+          if [ -n "$CH_PASSWORD" ]; then
+            AUTH_PARAMS="--user '$CH_USERNAME' --password '$CH_PASSWORD'"
+          else
+            AUTH_PARAMS="--user '$CH_USERNAME'"
+          fi
+
+
+          # 等待集群就绪
+          until clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --query "SELECT 1"; do
+            echo "Waiting for clickhouse-dev.clickhouse.svc.cluster.local..."
+            sleep 5
+          done
+          
+          # 执行分布式 DDL 在所有节点上创建表
+          clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --distributed_group=1 --multiquery "
+            -- 创建数据库（在所有节点上）
+            CREATE DATABASE IF NOT EXISTS kong ON CLUSTER '{$CH_CLUSTER}';
+            
+            -- 创建本地表（在每个分片副本上）
+            CREATE TABLE IF NOT EXISTS kong.kong_logs_local ON CLUSTER '{$CH_CLUSTER}'
+            (
+                event_time DateTime64(3) DEFAULT now64(),
+                service_name String,
+                route_name String,
+                consumer String,
+                client_ip String,
+                method String,
+                path String,
+                status_code UInt16,
+                request_headers String DEFAULT '{}',
+                response_headers String DEFAULT '{}',
+                request_body String DEFAULT '',
+                response_body String DEFAULT '',
+                request_size UInt32 DEFAULT 0,
+                response_size UInt32 DEFAULT 0,
+                latency Float32 DEFAULT 0,
+                upstream_latency Float32 DEFAULT 0,
+                kong_latency Float32 DEFAULT 0,
+                shard_num UInt8 DEFAULT 0
+            )
+            ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/kong_logs_local', '{replica}')
+            PARTITION BY toYYYYMM(event_time)
+            ORDER BY (event_time, service_name, status_code)
+            SETTINGS index_granularity = 8192;
+            
+            -- 创建分布式表（在所有节点上）
+            CREATE TABLE IF NOT EXISTS kong_logs.kong_logs_distributed ON CLUSTER '{$CH_CLUSTER}'
+            (
+                event_time DateTime64(3),
+                service_name String,
+                route_name String,
+                consumer String,
+                client_ip String,
+                method String,
+                path String,
+                status_code UInt16,
+                request_headers String,
+                response_headers String,
+                request_body String,
+                response_body String,
+                request_size UInt32,
+                response_size UInt32,
+                latency Float32,
+                upstream_latency Float32,
+                kong_latency Float32,
+                shard_num UInt8
+            )
+            ENGINE = Distributed('{$CH_CLUSTER}', 'kong', 'kong_logs_local', rand());
+            
+            -- 验证表创建
+            SELECT 
+              'Tables created successfully on cluster' as status;
+          "
+          
+          # 验证表在所有节点上的创建情况
+          echo "Verifying table creation across cluster..."
+          clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --query "
+            SELECT 
+              hostName() as host,
+              name as table_name,
+              engine
+            FROM clusterAllReplicas('{$CH_CLUSTER}', system.tables) 
+            WHERE database = 'kong'
+            ORDER BY host, table_name;
+          "
+          
+          # 测试数据插入
+          echo "Testing data insertion..."
+          clickhouse-client --host clickhouse-dev.clickhouse.svc.cluster.local $AUTH_PARAMS --query "
+            INSERT INTO kong.kong_logs_distributed 
+            (event_time, service_name, route_name, consumer, client_ip, method, path, status_code, latency)
+            VALUES
+            (now(), 'test-service', 'test-route', 'test-user', '192.168.1.1', 'GET', '/api/test', 200, 12.5);
+            
+            -- 查询验证数据分布
+            SELECT 
+              hostName() as host,
+              shard_num,
+              count(*) as record_count
+            FROM clusterAllReplicas('{$CH_CLUSTER}', kong.kong_logs_distributed)
+            GROUP BY host, shard_num
+            ORDER BY host, shard_num;
+          "
+          
+          echo "Distributed table creation completed successfully!"
+        env:
+        - name: CLICKHOUSE_LOG_LEVEL
+          value: "warning"
+        - name: CLICKHOUSE_PASSWORD
+          value: "{{ .Values.auth.password }}"
+        - name: CLICKHOUSE_USERNAME
+          value: "{{ .Values.auth.username }}"
+        - name: CLICKHOUSE_CLUSTER
+          value: "{{ .Values.clusterName }}"
+      restartPolicy: OnFailure
+  backoffLimit: 3
+  activeDeadlineSeconds: 300
+{{- end }}
