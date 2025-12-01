@@ -67,7 +67,7 @@ spec:
             )
             ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/kong_logs_local', '{replica}')
             PARTITION BY toYYYYMM(timestamp)
-            ORDER BY (timestamp, status_code)
+            ORDER BY (timestamp)
             SETTINGS index_granularity = 8192;
             
             -- 创建分布式表（在所有节点上）
