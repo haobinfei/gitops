@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-page # Deployment 名称
+  labels:
+    app: home-page           # 用于标识该应用
+spec:
+  replicas: 1                  # 启动 1 个 Pod 副本（可根据需要调整）
+  selector:
+    matchLabels:
+      app: home-page         # 必须与下面 template 的 label 匹配
+  template:
+    metadata:
+      labels:
+        app: home-page       # Pod 的标签，用于 Service 关联
+    spec:
+      containers:
+      - name: home-page  # 容器名称
+        image: harbor.ss-vip.cn/library/home-page:latest  # ✅ 请替换为你的 Docker 镜像名称！
+        # 如果你的镜像在 Docker Hub，比如：username/my-blog:latest
+        # 如果在阿里云：registry.cn-hangzhou.aliyuncs.com/your-ns/my-blog:latest
+        ports:
+        - containerPort: 80    # Nginx 默认监听 80 端口
