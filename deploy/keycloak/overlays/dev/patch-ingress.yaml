@@ -3,9 +3,6 @@ kind: Ingress
 metadata:
   name: keycloak
 spec:
-  tls:
-    - hosts:
-        - keycloak.ss-vip.cn
   rules:
     - host: keycloak.ss-vip.cn
       http:
