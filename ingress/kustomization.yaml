@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: external
+
+resources:
+- ./keycloak/service.yaml
+- ./keycloak/ingress.yaml
+
+# 通用标签和注解
+commonLabels:
+  app: keycloak
+  managed-by: kustomize
+
+commonAnnotations:
+  version: v1.0.1
+  description: "Keycloak Ingress"
