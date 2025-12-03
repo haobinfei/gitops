@@ -4,8 +4,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: keycloak
-  labels:
-    app: keycloak
 spec:
   serviceName: keycloak-discovery
   # Run with one replica to save resources, or with two replicas to allow for rolling updates for configuration changes
