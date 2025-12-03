@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: keycloak
 spec:
+  ingressClassName: kong
   rules:
     - host: keycloak.ss-vip.cn
       http:
