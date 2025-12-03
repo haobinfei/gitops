@@ -4,9 +4,9 @@ metadata:
   name: keycloak
 subsets:
 - addresses:
-  - ip: 192.168.122.51:32080
-  - ip: 192.168.122.52:32080
-  - ip: 192.168.122.53:32080
+  - ip: 192.168.122.51
+  - ip: 192.168.122.52
+  - ip: 192.168.122.53
   ports:
-  - port: 80
+  - port: 32080
     protocol: TCP
