@@ -8,16 +8,3 @@ spec:
       targetPort: 80
       protocol: TCP
 
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: keycloak
-subsets:
-- addresses:
-  - ip: 192.168.122.51:32080
-  - ip: 192.168.122.52:32080
-  - ip: 192.168.122.53:32080
-  ports:
-  - port: 80
-    protocol: TCP

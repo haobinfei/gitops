@@ -5,6 +5,7 @@ namespace: external
 resources:
 - ./keycloak/service.yaml
 - ./keycloak/ingress.yaml
+- ./keycloak/endpoints.yaml
 
 # 通用标签和注解
 commonLabels:
