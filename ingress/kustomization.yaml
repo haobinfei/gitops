@@ -6,4 +6,6 @@ resources:
 - ./keycloak/service.yaml
 - ./keycloak/ingress.yaml
 - ./keycloak/endpoints.yaml
-- ./grafana/*.yaml
+- ./grafana/ingress.yaml
+- ./grafana/service.yaml
+- ./grafana/endpoints.yaml
