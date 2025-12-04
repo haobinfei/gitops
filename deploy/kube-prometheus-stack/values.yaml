@@ -1339,7 +1339,7 @@ grafana:
     # hosts:
     #   - grafana.domain.com
     hosts:
-      - grafana.dev.ss-vip.cn
+      - grafana.ss-vip.cn
 
     ## Path for grafana ingress
     path: /
