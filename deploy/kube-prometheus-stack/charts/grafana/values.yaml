@@ -97,9 +97,9 @@ livenessProbe:
 
 image:
   # -- The Docker registry
-  registry: docker.io
+  registry: registry.cn-beijing.aliyuncs.com
   # -- Docker image repository
-  repository: grafana/grafana
+  repository: ss-vip/grafana
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -957,8 +957,8 @@ smtp:
 sidecar:
   image:
     # -- The Docker registry
-    registry: quay.io
-    repository: kiwigrid/k8s-sidecar
+    registry: registry.cn-beijing.aliyuncs.com
+    repository: ss-vip/k8s-sidecar
     tag: 2.1.2
     sha: ""
   imagePullPolicy: IfNotPresent
