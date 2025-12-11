@@ -475,7 +475,7 @@ configs:
     # -- Known hosts to be added to the known host list by default.
     # @default -- See [values.yaml]
     knownHosts: |
-      [ssh.github.com]:443 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdk3uYPXayA+44Gt9M/iFX3TLdk++oWI0KUQvIrrvc5+wqr2NtMY90dUQ/kxPWnSf5Nj5rvQhqSKJAoMlz8ygtqCUxEJ0b+hweCQSrNbVx8aEU7CvfwYcjfthyuuRTCPuJai76yQI5yLURMaQHwfjxX0G/ozaVA+HYUtFM7Pl6zHLJqX38u1kVtKRBIZ198WpAAhKH/1oBohrBmvTLVb50jcM3KBIqDo4l1F8o7+SLWXv/4rdI7L/jI602D1VRLhX1FrhXHCbN+fEvyv1lrYfSylB6hIx4R35E8KraajibyHmDJGLm2S+fFSDMohsFktQBl0p0YfPBYjPfoGqk6+yZ8dsFj8LHbnK7uI0ogYJSCI5TASMwGTcbEdLpwKF0C0qFWCbaYzipT5l1/38KgbbwoTTbg6KsexKQa2SHv5L58ktJb2uXR+ifHmMUL6zjg6TV0QoB2XchSga0/opJUbhOZOv7kFCe9310GMxI6vOPVQpq136n/lrNAeJ8o7V8wUE=
+      github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+8LAKWfsvybnjjm/Q6+tzBPp4DJrKD3gZANh686hNC
     # -- Additional known hosts for private repositories
     extraHosts: ''
 
@@ -546,15 +546,15 @@ configs:
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
   ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
   clusterCredentials: {}
-    # mycluster:
-    #   server: https://mycluster.example.com
-    #   labels: {}
-    #   annotations: {}
-    #   config:
-    #     bearerToken: "<authentication token>"
-    #     tlsClientConfig:
-    #       insecure: false
-    #       caData: "<base64 encoded certificate>"
+    dev-cluster:
+      server: https://192.168.122.51:6443
+      labels: {}
+      annotations: {}
+      config:
+        bearerToken: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJlVENDQVIrZ0F3SUJBZ0lCQURBS0JnZ3Foa2pPUFFRREFqQWtNU0l3SUFZRFZRUUREQmx5YTJVeUxYTmwKY25abGNpMWpZVUF4TnpVNU16TXdNelkwTUI0WERUSTFNVEF3TVRFME5USTBORm9YRFRNMU1Ea3lPVEUwTlRJMApORm93SkRFaU1DQUdBMVVFQXd3WmNtdGxNaTF6WlhKMlpYSXRZMkZBTVRjMU9UTXpNRE0yTkRCWk1CTUdCeXFHClNNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJJT1Y4R3pHVlNqUkcyTVdBMng5TmFKSnJiUHJneGcwNHUydjdFZzkKR3FuSjBvRTk4YnZWanRVNzZ5Y2xXT0ROSWFQT1BaYzJKUDN6ZFQrcnZQajhzZWlqUWpCQU1BNEdBMVVkRHdFQgovd1FFQXdJQ3BEQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCU0FldWdSNDVLOGlvM2RGZk9KCkZKR0ZINVJVT2pBS0JnZ3Foa2pPUFFRREFnTklBREJGQWlBYmxZZFhEcHNaUm1KOWljc3hZK2F4MWhUZG9MQjEKV1h6SmJZaEExWU0rRXdJaEFJa3lJdTNhZHc5Z2xkeW5ONUt5SXR4S2F4Q1RybWlrbXE0amhQNmtqVldmCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+        tlsClientConfig:
+          insecure: false
+          caData: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJrVENDQVRpZ0F3SUJBZ0lJV0d0clByMnAzRmN3Q2dZSUtvWkl6ajBFQXdJd0pERWlNQ0FHQTFVRUF3d1oKY210bE1pMWpiR2xsYm5RdFkyRkFNVGMxT1RNek1ETTJOREFlRncweU5URXdNREV4TkRVeU5EUmFGdzB5TmpFdwpNREV4TkRVeU5EUmFNREF4RnpBVkJnTlZCQW9URG5ONWMzUmxiVHB0WVhOMFpYSnpNUlV3RXdZRFZRUURFd3h6CmVYTjBaVzA2WVdSdGFXNHdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CQndOQ0FBVHNMdWF4TlF5TWpLQy8KN09uc2l1Q1NpakpyUDU0YUpWNFk1MUlKYzRiM0w1NWIzOC9qYVNEL2ZTSU94dXJDMThnQ0JUTzlweUpQRU9oRQozbldici9tYm8wZ3dSakFPQmdOVkhROEJBZjhFQkFNQ0JhQXdFd1lEVlIwbEJBd3dDZ1lJS3dZQkJRVUhBd0l3Ckh3WURWUjBqQkJnd0ZvQVVuMkJJZWphTE9WYmtZaTN0YklmZnpqV1RuQll3Q2dZSUtvWkl6ajBFQXdJRFJ3QXcKUkFJZ0FpSVdIV1l4ODdsSGNVbnBkNlkxOFVINCs1QnNVSjhzODgrcElnWEJnNm9DSUhPV3UyT0FSUWx2WWRjQgpIc3VxYW9xenAxZnZHMk85bTV2MVlqbHZ5SGpqCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJlVENDQVIrZ0F3SUJBZ0lCQURBS0JnZ3Foa2pPUFFRREFqQWtNU0l3SUFZRFZRUUREQmx5YTJVeUxXTnMKYVdWdWRDMWpZVUF4TnpVNU16TXdNelkwTUI0WERUSTFNVEF3TVRFME5USTBORm9YRFRNMU1Ea3lPVEUwTlRJMApORm93SkRFaU1DQUdBMVVFQXd3WmNtdGxNaTFqYkdsbGJuUXRZMkZBTVRjMU9UTXpNRE0yTkRCWk1CTUdCeXFHClNNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJDODZZSWVQdEU2Zjk2MFovaHNEZkRZeTd4VmNpTnhBNjNNZlpreTUKb05VVjI3clQ3S0s5T2RFTDR4ZnZlSmpIWk9ZeEVDUFJXd2d5VTVTaUtQMFphOVNqUWpCQU1BNEdBMVVkRHdFQgovd1FFQXdJQ3BEQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCU2ZZRWg2Tm9zNVZ1UmlMZTFzCmg5L09OWk9jRmpBS0JnZ3Foa2pPUFFRREFnTklBREJGQWlBWmtudHlqKzdnNFIvNlJCTlJRWmp5NnZqMDhVVkEKMUJoVEJvNEUwNFZiUVFJaEFLS0FxbXFOaG1McEhCVzlMNVNWbjc4bFdWUkl2aEQrVlJxVjBWSGFIVHRUCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
     # mycluster2:
     #   server: https://mycluster2.example.com
     #   labels: {}
@@ -674,7 +674,7 @@ configs:
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: ""
+    argocdServerAdminPassword: "Wly5211314.,"
     # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
     # @default -- `""` (defaults to current time)
     argocdServerAdminPasswordMtime: ""
