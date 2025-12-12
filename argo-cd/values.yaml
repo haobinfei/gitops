@@ -487,7 +487,15 @@ configs:
 
     # -- TLS certificates for Git repositories
     # @default -- `{}` (See [values.yaml])
-    certificates: {}
+    certificates:
+      github.com: |
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+        QyNTUxOQAAACBvvCwCln7L8m5445v0OvrcwT6eAyayg94GQDYevOoTQgAAAJgdrpQcHa6U
+        HAAAAAtzc2gtZWQyNTUxOQAAACBvvCwCln7L8m5445v0OvrcwT6eAyayg94GQDYevOoTQg
+        AAAECLMeXSS5vgX3qrRAN8qG97mJbC1wgQankQJAiAWo4/sm+8LAKWfsvybnjjm/Q6+tzB
+        Pp4DJrKD3gZANh686hNCAAAAE2hhb2JpbmZlaUBoYW9iaW5mZWkBAg==
+        -----END OPENSSH PRIVATE KEY-----
       # server.example.com: |
       #   -----BEGIN CERTIFICATE-----
       #   ...
@@ -677,7 +685,7 @@ configs:
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: "Wly5211314.,"
+    argocdServerAdminPassword: "JDJiJDEwJDhuMzdhZUl5WDFndC5IYVVxMkQuL09vVkZwbjRhUjNxR0x3QWZEbnNkUUlhTDV1RHFoblFX"
     # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
     # @default -- `""` (defaults to current time)
     argocdServerAdminPasswordMtime: ""
