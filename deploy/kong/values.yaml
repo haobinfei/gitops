@@ -111,7 +111,7 @@ env:
   admin_gui_api_url: https://kong-admin.dev.ss-vip.cn
   plugins: "bundled,clickhouse-logger"
   database: "postgres"
-  pg_host: "postgresql-dev.postgresql.svc.cluster.local"
+  pg_host: "kong-postgresql-dev"
   pg_port: "5432"
   pg_user: "kong"
   pg_password: "kong123"
