@@ -647,6 +647,7 @@ configs:
     gitops:
       url: git@github.com:haobinfei/gitops.git
       type: git
+      name: gitops-repo
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
