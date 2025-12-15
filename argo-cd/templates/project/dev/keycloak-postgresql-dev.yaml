@@ -1,0 +1,28 @@
+{{ if .Capabilities.APIVersions.Has "argoproj.io/v1alpha1" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak-postgresql-dev
+  namespace: argocd
+spec:
+  destination:
+    namespace: keycloak
+    server: https://192.168.122.51:6443
+  project: dev
+  source:
+    helm:
+      valueFiles:
+      - values-keycloak.yaml
+    path: deploy/postgresql
+    repoURL: git@github.com:haobinfei/gitops.git
+    targetRevision: master
+  syncPolicy:
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2
+    syncOptions:
+    - CreateNamespace=true
+{{ end }}
