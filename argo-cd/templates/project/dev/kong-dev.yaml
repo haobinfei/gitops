@@ -1,0 +1,26 @@
+{{ if .Capabilities.APIVersions.Has "argoproj.io/v1alpha1" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kong-dev
+  namespace: argocd
+spec:
+  project: dev
+  source:
+    helm:
+      valueFiles:
+      - values.yaml
+    path: deploy/kong
+    repoURL: git@github.com:haobinfei/gitops.git
+    targetRevision: master
+  destination:
+    namespace: kong
+    server: https://192.168.122.51:6443
+  syncPolicy:
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2
+{{ end }}
