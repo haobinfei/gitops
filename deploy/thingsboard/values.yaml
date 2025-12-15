@@ -278,21 +278,21 @@ cassandra:
 #   pgpoolImage:
 #     tag: 4
 
-redis:
-  # Set architecture to either standalone or replication
-  architecture: standalone
-  auth:
-    password: setplease
-  master:
-    kind: Deployment
-    persistence:
-      enabled: false
-    disableCommands:
-      - FLUSHALL
-  replica:
-    replicaCount: 0
-    persistence:
-      enabled: false
+# redis:
+#   # Set architecture to either standalone or replication
+#   architecture: standalone
+#   auth:
+#     password: setplease
+#   master:
+#     kind: Deployment
+#     persistence:
+#       enabled: false
+#     disableCommands:
+#       - FLUSHALL
+#   replica:
+#     replicaCount: 0
+#     persistence:
+#       enabled: false
 
 kafka:
   persistence:
