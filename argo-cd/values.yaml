@@ -563,7 +563,7 @@ configs:
     dev-cluster:
       server: https://192.168.122.51:6443
       labels:
-        project: hsr
+        project: dev
       annotations: {}
       config:
         bearerToken: ""
