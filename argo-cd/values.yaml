@@ -645,10 +645,17 @@ configs:
   ## Creates a secret for each key/value specified below to create repositories
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
   repositories:
-    dev:
+    gitops:
       url: git@github.com:haobinfei/gitops.git
       type: git
-      project: dev
+      sshPrivateKey: |
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+        QyNTUxOQAAACBvvCwCln7L8m5445v0OvrcwT6eAyayg94GQDYevOoTQgAAAJgdrpQcHa6U
+        HAAAAAtzc2gtZWQyNTUxOQAAACBvvCwCln7L8m5445v0OvrcwT6eAyayg94GQDYevOoTQg
+        AAAECLMeXSS5vgX3qrRAN8qG97mJbC1wgQankQJAiAWo4/sm+8LAKWfsvybnjjm/Q6+tzB
+        Pp4DJrKD3gZANh686hNCAAAAE2hhb2JpbmZlaUBoYW9iaW5mZWkBAg==
+        -----END OPENSSH PRIVATE KEY-----
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
