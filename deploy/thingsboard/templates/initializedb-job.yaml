@@ -21,7 +21,8 @@ metadata:
   labels:
     {{- include "thingsboard.labels" . | nindent 4 }}
 spec:
-  ttlSecondsAfterFinished: 0
+  activeDeadlineSeconds: 300
+  backoffLimit: 3
   template:
     spec:
       initContainers:
