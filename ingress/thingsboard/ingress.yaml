@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thingsboard
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - thingsboard.dev.ss-vip.cn
+      secretName: thingsboard-ingress-tls
+  rules:
+    - host: thingsboard.dev.ss-vip.cn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: thingsboard
+                port:
+                  number: 80

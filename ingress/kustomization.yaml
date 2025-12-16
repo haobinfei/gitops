@@ -9,3 +9,6 @@ resources:
 - ./grafana/ingress.yaml
 - ./grafana/service.yaml
 - ./grafana/endpoints.yaml
+- ./thingsboard/service.yaml
+- ./thingsboard/ingress.yaml
+- ./thingsboard/endpoints.yaml
