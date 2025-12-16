@@ -66,9 +66,9 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kafka
-  tag: 3.2.0-debian-11-r3
+  registry: registry.cn-beijing.aliyuncs.com
+  repository: ss-vip/kafka
+  tag: 3.2.0-debian-11-r12
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -1640,6 +1640,12 @@ zookeeper:
   ## @param zookeeper.replicaCount Number of ZooKeeper nodes
   ##
   replicaCount: 1
+
+  image:
+    registry: registry.cn-beijing.aliyuncs.com
+    repository: ss-vip/zookeeper
+    tag: 3.8.0-debian-11-r56
+
   ## ZooKeeper authenticaiton
   ##
   auth:
