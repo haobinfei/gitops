@@ -266,41 +266,41 @@ cassandra:
   dbUser:
     password: setplease
 
-# postgresql-ha:
-#   nameOverride: pg
-#   postgresql:
-#     database: thingsboard
-#     replicaCount: 1
-#     password: setplease
-#     repmgrPassword: setplease
-#   postgresqlImage:
-#     tag: 12
-#   pgpool:
-#     adminPassword: setplease
-#     replicaCount: 1
-#     useLoadBalancing: false
-#   pgpoolImage:
-#     tag: 4
+postgresql-ha:
+  nameOverride: pg
+  postgresql:
+    database: thingsboard
+    replicaCount: 1
+    password: setplease
+    repmgrPassword: setplease
+  postgresqlImage:
+    tag: 15.10.0
+  pgpool:
+    adminPassword: setplease
+    replicaCount: 1
+    useLoadBalancing: false
+  pgpoolImage:
+    tag: 4
 
-# redis:
-#   # Set architecture to either standalone or replication
-#   architecture: standalone
-#   auth:
-#     password: setplease
-#   master:
-#     kind: Deployment
-#     persistence:
-#       enabled: false
-#     disableCommands:
-#       - FLUSHALL
-#   replica:
-#     replicaCount: 0
-#     persistence:
-#       enabled: false
+redis:
+  # Set architecture to either standalone or replication
+  architecture: standalone
+  auth:
+    password: setplease
+  master:
+    kind: Deployment
+    persistence:
+      enabled: false
+    disableCommands:
+      - FLUSHALL
+  replica:
+    replicaCount: 0
+    persistence:
+      enabled: false
 
-# kafka:
-#   persistence:
-#     enabled: false
-#   zookeeper:
-#     persistence:
-#       enabled: false
+kafka:
+  persistence:
+    enabled: false
+  zookeeper:
+    persistence:
+      enabled: false
