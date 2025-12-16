@@ -264,25 +264,14 @@ cassandra:
     repository: ss-vip/cassandra
     tag: 4.1.6-debian-12-r3
   dbUser:
+    user: cassandra
     password: setplease
 
 postgresql:
-  nameOverride: pg
   postgresql:
     database: thingsboard
-    replicaCount: 1
-    password: setplease
-    repmgrPassword: setplease
-  postgresqlImage:
-    registry: registry.cn-beijing.aliyuncs.com
-    repository: ss-vip/postgresql-repmgr
-    tag: 15.10.0
-  pgpool:
-    adminPassword: setplease
-    replicaCount: 1
-    useLoadBalancing: false
-  pgpoolImage:
-    tag: 4
+    username: thingsboard
+    password: thingsboard123
 
 redis:
   # Set architecture to either standalone or replication
