@@ -26,7 +26,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
+  storageClass: "csi-rbd-sc"
   postgresql:
     username: ""
     password: ""

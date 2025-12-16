@@ -267,7 +267,6 @@ cassandra:
     password: setplease
 
 postgresql-ha:
-  storageClass: "csi-rbd-sc"
   nameOverride: pg
   postgresql:
     database: thingsboard
