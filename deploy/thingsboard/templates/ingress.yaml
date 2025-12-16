@@ -92,7 +92,7 @@ spec:
                 name: {{ $releaseName }}-node
                 port:
                   number: {{ $values.node.service.port }}
-          - path: /assets/help/.*/rulenode/
+          - path: /assets/help/
             pathType: ImplementationSpecific
             backend:
               service:
