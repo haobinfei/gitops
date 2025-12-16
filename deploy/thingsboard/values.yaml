@@ -266,7 +266,7 @@ cassandra:
   dbUser:
     password: setplease
 
-postgresql-ha:
+postgresql:
   nameOverride: pg
   postgresql:
     database: thingsboard
