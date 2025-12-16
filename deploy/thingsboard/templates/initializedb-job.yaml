@@ -28,7 +28,7 @@ spec:
         - name: check-db-ready
           image: '{{ index .Values "postgresql-ha" "postgresqlImage" "registry" }}/ss-vip/postgresql:{{ index .Values "postgresql-ha" "postgresqlImage" "tag" }}'
           command: ['sh', '-c',
-            'until pg_isready -h {{ include "thingsboard.pgpoolservicename" . }} -p {{ index .Values "postgresql-ha" "pgpool" "containerPort" }};
+            'until pg_isready -h thingsboard-dev-pg-pgpool -p 5432;
             do echo waiting for database; sleep 2; done;']
       containers:
       - name: init-db
