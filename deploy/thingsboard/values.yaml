@@ -259,6 +259,10 @@ cassandra:
   # for an hybrid database set cassandra.enabled as true
   enabled: false
   replicaCount: 1
+  image:
+    registry: registry.cn-beijing.aliyuncs.com
+    repository: ss-vip/cassandra
+    tag: 4.1.6-debian-12-r3
   dbUser:
     password: setplease
 
@@ -294,9 +298,9 @@ cassandra:
 #     persistence:
 #       enabled: false
 
-kafka:
-  persistence:
-    enabled: false
-  zookeeper:
-    persistence:
-      enabled: false
+# kafka:
+#   persistence:
+#     enabled: false
+#   zookeeper:
+#     persistence:
+#       enabled: false
