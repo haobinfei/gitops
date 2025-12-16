@@ -9,7 +9,7 @@ spec:
   source:
     helm:
       valueFiles:
-      - values-kafka.yaml
+      - values-thingsboard.yaml
     path: deploy/kafka/18.0.0
     repoURL: git@github.com:haobinfei/gitops.git
     targetRevision: master
