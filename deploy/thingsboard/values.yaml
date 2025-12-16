@@ -40,7 +40,7 @@ ingress:
     kubernetes.io/ingress.class: kong
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - thingsboard.dev.ss-vip.com
+    - thingsboard.dev.ss-vip.cn
   # Enable or disable tls, same host as above
   tls: false
   
