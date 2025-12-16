@@ -28,7 +28,7 @@ spec:
         - name: '{{ .Release.Name }}-container-registry'
       initContainers:
         - name: check-db-ready
-          image: '{{ index .Values "postgresql-ha" "postgresqlImage" "registry" }}/{{ index .Values "postgresql-ha" "postgresqlImage" "repository" }}:{{ index .Values "postgresql-ha" "postgresqlImage" "tag" }}'
+          image: '{{ index .Values "postgresql-ha" "postgresqlImage" "registry" }}/ss-vip/postgresql:{{ index .Values "postgresql-ha" "postgresqlImage" "tag" }}'
           command: ['sh', '-c',
             'until pg_isready -h {{ include "thingsboard.pgpoolservicename" . }} -p {{ index .Values "postgresql-ha" "pgpool" "containerPort" }};
             do echo waiting for database; sleep 2; done;']
