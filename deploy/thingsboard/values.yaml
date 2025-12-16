@@ -274,6 +274,8 @@ postgresql-ha:
     password: setplease
     repmgrPassword: setplease
   postgresqlImage:
+    registry: registry.cn-beijing.aliyuncs.com
+    repository: ss-vip/postgresql-repmgr
     tag: 15.10.0
   pgpool:
     adminPassword: setplease
