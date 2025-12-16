@@ -24,8 +24,6 @@ spec:
   ttlSecondsAfterFinished: 0
   template:
     spec:
-      imagePullSecrets:
-        - name: '{{ .Release.Name }}-container-registry'
       initContainers:
         - name: check-db-ready
           image: '{{ index .Values "postgresql-ha" "postgresqlImage" "registry" }}/ss-vip/postgresql:{{ index .Values "postgresql-ha" "postgresqlImage" "tag" }}'
