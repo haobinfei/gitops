@@ -26,9 +26,9 @@ spec:
     spec:
       initContainers:
         - name: check-db-ready
-          image: '{{ index .Values "postgresql-ha" "postgresqlImage" "registry" }}/ss-vip/postgresql:{{ index .Values "postgresql-ha" "postgresqlImage" "tag" }}'
+          image: 'registry.cn-beijing.aliyuncs.com/ss-vip/postgresql:15.10.0'
           command: ['sh', '-c',
-            'until pg_isready -h thingsboard-dev-pg-pgpool -p 5432;
+            'until pg_isready -h {{ .Release.Name }}-postgresql -p 5432;
             do echo waiting for database; sleep 2; done;']
       containers:
       - name: init-db
