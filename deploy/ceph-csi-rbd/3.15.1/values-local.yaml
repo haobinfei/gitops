@@ -145,15 +145,15 @@ nodeplugin:
 
   registrar:
     image:
-      repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+      repository: registry.cn-beijing.aliyuncs.com/kubernetes-dev/csi-node-driver-registrar
       tag: v2.13.0
       pullPolicy: IfNotPresent
     resources: {}
 
   plugin:
     image:
-      repository: quay.io/cephcsi/cephcsi
-      tag: v3.15.1
+      repository: registry.cn-beijing.aliyuncs.com/kubernetes-dev/cephcsi
+      tag: v3.15.0
       pullPolicy: IfNotPresent
     resources: {}
 
@@ -279,7 +279,7 @@ provisioner:
     name: attacher
     enabled: true
     image:
-      repository: registry.k8s.io/sig-storage/csi-attacher
+      repository: registry.cn-beijing.aliyuncs.com/kubernetes-dev/csi-attacher
       tag: v4.8.0
       pullPolicy: IfNotPresent
     resources: {}
@@ -296,7 +296,7 @@ provisioner:
     name: resizer
     enabled: true
     image:
-      repository: registry.k8s.io/sig-storage/csi-resizer
+      repository: registry.cn-beijing.aliyuncs.com/kubernetes-dev/csi-resizer
       tag: v1.13.1
       pullPolicy: IfNotPresent
     resources: {}
@@ -311,7 +311,7 @@ provisioner:
 
   snapshotter:
     image:
-      repository: registry.k8s.io/sig-storage/csi-snapshotter
+      repository: registry.cn-beijing.aliyuncs.com/kubernetes-dev/csi-snapshotter
       tag: v8.2.0
       pullPolicy: IfNotPresent
     resources: {}
