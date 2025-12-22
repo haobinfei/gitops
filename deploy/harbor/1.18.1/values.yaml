@@ -49,9 +49,6 @@ expose:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       kubernetes.io/ingress.class: traefik
-      traefik.ingress.kubernetes.io/router.timeouts.readtimeout: "0s"
-      traefik.ingress.kubernetes.io/router.timeouts.writetimeout: "0s"
-      traefik.ingress.kubernetes.io/router.timeouts.idletimeout: "0s"
     # ingress-specific labels
     labels: {}
   route:
