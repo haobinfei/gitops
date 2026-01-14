@@ -27,7 +27,7 @@ spec:
         hardware-type: gpu-node
       containers:
       - name: llm-container
-        image: ghcr.io/ggerganov/llama.cpp:full-cuda
+        image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/ggerganov/llama.cpp:full-cuda
         command: ["/bin/bash"]
         args:
         - -c
