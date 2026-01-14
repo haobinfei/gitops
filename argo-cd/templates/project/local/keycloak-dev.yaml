@@ -1,0 +1,25 @@
+{{ if .Capabilities.APIVersions.Has "argoproj.io/v1alpha1" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: llmma
+  namespace: argocd
+spec:
+  destination:
+    namespace: llm-serving
+    server: https://kubernetes.default.svc
+  project: local
+  source:
+    path: deploy/llama/overlays
+    repoURL: git@github.com:haobinfei/gitops.git
+    targetRevision: master
+  syncPolicy:
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2
+    syncOptions:
+    - PrunePropagationPolicy=orphan
+{{ end }}
