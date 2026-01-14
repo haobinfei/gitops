@@ -1,0 +1,130 @@
+# kubernetes/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-api
+  namespace: llm-serving
+  labels:
+    app: llm-api
+    version: v1.0.0
+spec:
+  replicas: 1  # 单GPU只能运行一个副本
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: llm-api
+  template:
+    metadata:
+      labels:
+        app: llm-api
+        version: v1.0.0
+    spec:
+      nodeSelector:
+        hardware-type: gpu-node
+      containers:
+      - name: llm-container
+        image: ghcr.io/ggerganov/llama.cpp:full-cuda
+        command: ["/bin/bash"]
+        args:
+        - -c
+        - |
+          # 创建工作目录
+          mkdir -p /app/models /app/cache
+          
+          # 下载模型 (如果不存在)
+          if [ ! -f /app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf ]; then
+            echo "Downloading TinyLlama model..."
+            wget -O /app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf \
+              https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+          fi
+          
+          # 启动API服务器
+          cd /app
+          python3 /app/server.py
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 5000
+          name: flask
+        env:
+        - name: MODEL_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: llm-config
+              key: MODEL_PATH
+        - name: MAX_TOKENS
+          valueFrom:
+            configMapKeyRef:
+              name: llm-config
+              key: MAX_TOKENS
+        - name: TEMPERATURE
+          valueFrom:
+            configMapKeyRef:
+              name: llm-config
+              key: TEMPERATURE
+        - name: GPU_LAYERS
+          valueFrom:
+            configMapKeyRef:
+              name: llm-config
+              key: GPU_LAYERS
+        - name: THREADS
+          valueFrom:
+            configMapKeyRef:
+              name: llm-config
+              key: THREADS
+        resources:
+          requests:
+            nvidia.com/gpu: 1
+            memory: "8Gi"
+            cpu: "4"
+          limits:
+            nvidia.com/gpu: 1
+            memory: "16Gi"
+            cpu: "8"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /app/models
+        - name: cache-storage
+          mountPath: /app/cache
+        - name: config-volume
+          mountPath: /app/config
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 10
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: llm-models-pvc
+      - name: cache-storage
+        persistentVolumeClaim:
+          claimName: llm-cache-pvc
+      - name: config-volume
+        configMap:
+          name: llm-config
+      # imagePullSecrets:
+      # - name: regcred  # 如果需要私有仓库认证

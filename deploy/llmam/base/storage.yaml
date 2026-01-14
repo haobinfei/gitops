@@ -1,0 +1,67 @@
+# kubernetes/storage.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: llm-models-pv
+  labels:
+    app: llm-models
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-rbd-sc
+  hostPath:
+    path: "/opt/llm/models"
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llm-models-pvc
+  namespace: llm-serving
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: csi-rbd-sc
+  selector:
+    matchLabels:
+      app: llm-models
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: llm-cache-pv
+  labels:
+    app: llm-cache
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-rbd-sc
+  hostPath:
+    path: "/opt/llm/cache"
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llm-cache-pvc
+  namespace: llm-serving
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: csi-rbd-sc
+  selector:
+    matchLabels:
+      app: llm-cache

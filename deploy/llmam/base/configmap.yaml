@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-config
+  namespace: llm-serving
+data:
+  MODEL_NAME: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+  MODEL_PATH: "/app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+  MAX_TOKENS: "256"
+  TEMPERATURE: "0.7"
+  CONTEXT_SIZE: "2048"
+  GPU_LAYERS: "35"
+  THREADS: "8"
+  HOST: "0.0.0.0"
+  PORT: "8000"
