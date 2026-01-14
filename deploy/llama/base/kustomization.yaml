@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yaml
+- configmap.yaml
+- service.yaml
+- ingress.yaml
+- storage.yaml
+
+# 通用标签和注解
+commonLabels:
+  app-name: llama
+  managed-by: kustomize
+
+commonAnnotations:
+  version: v1.0.1
+  description: "Llama Application"
